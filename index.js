@@ -5,9 +5,14 @@ var xlsx = require('xlsx'),
 // Regular expression to get the cell header
 //
 var letters    = range('A', 'Z').toArray(),
-    cellHeader = /^([A-Z]+)\d{1,}/,
-    isCell     = /^[A-Z]+\d{1,}/;
-
+    cellHeader = /^([A-Za-z]+)\d{1,}/,
+    isCell     = /^[A-Za-z]+\d{1,}/;
+var letters2 = range('A', 'Z').toArray();
+    for (var i = 0; i < letters2.length; i++) {
+      for (var k = 0; k < letters2.length; k++) {
+          letters.push(letters2[i]+ letters2[k]);
+      }
+    }
 //
 // ### function xlsxRows (options)
 // #### @options {string|Object} Options for reading rows
