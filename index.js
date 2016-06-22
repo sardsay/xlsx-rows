@@ -79,7 +79,7 @@ module.exports = function (options, sheetIndex) {
     var index = rowIndex(cell);
     var rawObj = {}
       rawObj.cell = cell;
-      rawObj.header = getLetter(cell);
+      rawObj.column = getLetter(cell);
       rawObj.value = sheet[cell].v
       row.push(rawObj);
   });
