@@ -1,6 +1,6 @@
 var xlsx = require('xlsx'),
     range = require('r...e');
-
+    
 //
 // Regular expression to get the cell header
 //
@@ -21,11 +21,10 @@ var letters2 = range('A', 'Z').toArray();
 // ####   format    {string} Format of the file to read.
 // Reads the rows from the XLSX.
 //
-module.exports = function (options, sheetIndex) {
+module.exports = function (options, sheetIndex, lastColumn) {
   var file   = options,
       rows   = [],
       row    = [],
-      firstLetter = 'A',
       start  = /^A\d{1,}/,
       format = 'v',
       workbook,
@@ -58,8 +57,10 @@ module.exports = function (options, sheetIndex) {
       return val == undefined ? '' : val;
     });
 
-    rows.push(row.slice());
-    row = [];
+    if (row.length > 0) {
+      rows.push(row.slice());
+      row = [];  
+    }
   }
 
   Object.keys(sheet).forEach(function (cell) {
@@ -72,20 +73,18 @@ module.exports = function (options, sheetIndex) {
     //
     var currentLetter = getLetter(cell);
 
-    if (firstLetter == currentLetter) {
-        pushRow();
-    }
-
     var index = rowIndex(cell);
     var rawObj = {}
       rawObj.cell = cell;
       rawObj.column = getLetter(cell);
       rawObj.value = sheet[cell].v
       row.push(rawObj);
+      if (lastColumn == currentLetter) {
+          pushRow();
+      }
   });
-
+    
   pushRow();
-  rows.shift();
   return rows;
 };
 
