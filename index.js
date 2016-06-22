@@ -9,9 +9,9 @@ var letters    = range('A', 'Z').toArray(),
     isCell     = /^[A-Za-z]+\d{1,}/;
 var letters2 = range('A', 'Z').toArray();
     letters.forEach(function (lett1) {
-    letters2.forEach(function (lett2) {
-          letters.push(letters2[i] + letters2[k]);
-      })
+      letters2.forEach(function (lett2) {
+          letters.push(lett1 + lett2);
+        })
     })
 //
 // ### function xlsxRows (options)
@@ -21,12 +21,13 @@ var letters2 = range('A', 'Z').toArray();
 // ####   format    {string} Format of the file to read.
 // Reads the rows from the XLSX.
 //
-module.exports = function (options) {
+module.exports = function (options, sheetIndex) {
   var file   = options,
       rows   = [],
       row    = [],
+      firstLetter = 'A',
       start  = /^A\d{1,}/,
-      format = 'w',
+      format = 'v',
       workbook,
       sheetname,
       sheet;
@@ -38,7 +39,7 @@ module.exports = function (options) {
   }
 
   workbook  = xlsx.readFile(file);
-  sheetname = sheetname || workbook.SheetNames[0];
+  sheetname = sheetname || workbook.SheetNames[sheetIndex];
   sheet     = workbook.Sheets[sheetname];
 
   if (!sheet) {
@@ -64,22 +65,27 @@ module.exports = function (options) {
   Object.keys(sheet).forEach(function (cell) {
     if (!isCell.test(cell)) {
       return;
-    }
+    } 
+    //
+    // If the first cell equal start cell
+    // push "row" to "rows"
+    //
+    var currentLetter = getLetter(cell);
 
-    //
-    // If we are the first cell (i.e. it is A12 or A0)
-    // then add the current "row" to the "rows" ONLY
-    // if it is not empty.
-    //
-    if (start.test(cell) && row && row.length) {
-      pushRow();
+    if (firstLetter == currentLetter) {
+        pushRow();
     }
 
     var index = rowIndex(cell);
-    row[index] = sheet[cell][format];
+    var rawObj = {}
+      rawObj.cell = cell;
+      rawObj.header = getLetter(cell);
+      rawObj.value = sheet[cell].v
+      row.push(rawObj);
   });
 
   pushRow();
+  rows.shift();
   return rows;
 };
 
@@ -102,4 +108,8 @@ function rowIndex (cell) {
   header = header[1];
   length = header.length;
   return letters.indexOf(header);
+}
+function getLetter(cell){
+  var letterHeader = cellHeader.exec(cell);
+  return letterHeader[1];
 }
