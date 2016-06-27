@@ -56,14 +56,7 @@ module.exports = function (options, sheetIndex, lastColumn) {
     //
     rows.push(rawObj);
     rawObj = []
-    /*row = row.map(function (val) {
-      return val == undefined ? '' : val;
-    });
-
-    if (row.length > 0) {
-      rows.push(row.slice());
-      row = [];  
-    }*/
+    
   }
 
   Object.keys(sheet).forEach(function (cell) {
@@ -74,22 +67,13 @@ module.exports = function (options, sheetIndex, lastColumn) {
     var currentLetter = getLetter(cell);
     var index = rowIndex(cell);
     
-      /*rawObj[cell] = {
-        cell : cell,
-        column : getLetter(cell),
-        value : sheet[cell].v
-      }*/
-      rawObj[getLetter(cell)] = {value :sheet[cell].v,column:cell}
-      /*rawObj[cell].column = getLetter(cell);
-      rawObj[cell].value = sheet[cell].v*/
-      // row.push(rawObj);
-      // rawObj = {}
+      rawObj[getLetter(cell)] = {value :sheet[cell].v,column:cell,format :sheet[cell].w}
+      
     if (lastColumn == currentLetter) {
         pushRow();
     }
   });
 
-  // pushRow();
   return rows;
 };
 
