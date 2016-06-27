@@ -1,6 +1,6 @@
 var xlsx = require('xlsx'),
     range = require('r...e');
-    
+
 //
 // Regular expression to get the cell header
 //
@@ -40,7 +40,7 @@ module.exports = function (options, sheetIndex, lastColumn) {
   workbook  = xlsx.readFile(file);
   sheetname = sheetname || workbook.SheetNames[sheetIndex];
   sheet     = workbook.Sheets[sheetname];
-
+// console.log(sheet)
   if (!sheet) {
     throw new Error('No sheet with name: ' + sheetname);
   }
@@ -48,43 +48,48 @@ module.exports = function (options, sheetIndex, lastColumn) {
   //
   // Pushes the next row onto the `rows`
   //
+  var rawObj = []
   function pushRow() {
     //
     // Fill the row since we prefer the empty string
     // to a value of undefined.
     //
-    row = row.map(function (val) {
+    rows.push(rawObj);
+    rawObj = []
+    /*row = row.map(function (val) {
       return val == undefined ? '' : val;
     });
 
     if (row.length > 0) {
       rows.push(row.slice());
       row = [];  
-    }
+    }*/
   }
 
   Object.keys(sheet).forEach(function (cell) {
     if (!isCell.test(cell)) {
       return;
-    } 
-    //
-    // If the first cell equal start cell
-    // push "row" to "rows"
-    //
-    var currentLetter = getLetter(cell);
-
-    var index = rowIndex(cell);
-    var rawObj = {}
-      rawObj.cell = cell;
-      rawObj.column = getLetter(cell);
-      rawObj.value = sheet[cell].v
-      row.push(rawObj);
-      if (lastColumn == currentLetter) {
-          pushRow();
-      }
-  });
+    }
     
-  pushRow();
+    var currentLetter = getLetter(cell);
+    var index = rowIndex(cell);
+    
+      /*rawObj[cell] = {
+        cell : cell,
+        column : getLetter(cell),
+        value : sheet[cell].v
+      }*/
+      rawObj[getLetter(cell)] = {value :sheet[cell].v,column:cell}
+      /*rawObj[cell].column = getLetter(cell);
+      rawObj[cell].value = sheet[cell].v*/
+      // row.push(rawObj);
+      // rawObj = {}
+    if (lastColumn == currentLetter) {
+        pushRow();
+    }
+  });
+
+  // pushRow();
   return rows;
 };
 
