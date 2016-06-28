@@ -21,7 +21,7 @@ var letters2 = range('A', 'Z').toArray();
 // ####   format    {string} Format of the file to read.
 // Reads the rows from the XLSX.
 //
-module.exports = function (options, sheetIndex, lastColumn) {
+module.exports = function (options, sheetIndex) {
   var file   = options,
       rows   = [],
       row    = [],
@@ -40,7 +40,7 @@ module.exports = function (options, sheetIndex, lastColumn) {
   workbook  = xlsx.readFile(file);
   sheetname = sheetname || workbook.SheetNames[sheetIndex];
   sheet     = workbook.Sheets[sheetname];
-// console.log(sheet)
+
   if (!sheet) {
     throw new Error('No sheet with name: ' + sheetname);
   }
@@ -56,24 +56,30 @@ module.exports = function (options, sheetIndex, lastColumn) {
     //
     rows.push(rawObj);
     rawObj = []
-    
+    ckRow = true;
   }
-
+  var ckRow = true;// check end row : true = start row
+  var currentRow
   Object.keys(sheet).forEach(function (cell) {
     if (!isCell.test(cell)) {
       return;
     }
-    
     var currentLetter = getLetter(cell);
-    var index = rowIndex(cell);
-    
+    var strCell = cell;
+    var currentCell = strCell.substr(currentLetter.length)
+    // check first row parameter
+      if (ckRow) {
+        currentRow = currentCell
+        ckRow = false;
+      }else{
+        // check data is new row push data in array
+        if (currentRow != currentCell) {
+          pushRow()
+        }
+      }
       rawObj[getLetter(cell)] = {value :sheet[cell].v,column:cell,format :sheet[cell].w}
-      
-    if (lastColumn == currentLetter) {
-        pushRow();
-    }
   });
-
+  pushRow();
   return rows;
 };
 
