@@ -22,5 +22,4 @@ All you have to do is pass it an Excel (`*.xlsx`) file and you get rows of infor
     F: { value: 'test6', column: 'F1', format: '14/01/2010' } ]]
 ```
 
-#### Author: [Charlie Robbins](http://github.com/indexzero)
 #### License: MIT
