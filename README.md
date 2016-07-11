@@ -8,8 +8,8 @@ All you have to do is pass it an Excel (`*.xlsx`) file and you get rows of infor
 
 ``` js
   var xlsxRows = require('xlsx-rows');
-
-  var rows = xlsxRows('my-workbook.xlsx');
+  var sheetIndex = 0;
+  var rows = xlsxRows('my-workbook.xlsx', sheetIndex);
   console.dir(rows); // yay rows of things!
 ```
 
