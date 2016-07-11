@@ -24,7 +24,7 @@ var letters2 = range('A', 'Z').toArray();
 module.exports = function (options, sheetIndex) {
   var file   = options,
       rows   = [],
-      row    = [],
+      rawObj    = [],
       start  = /^A\d{1,}/,
       format = 'v',
       workbook,
@@ -48,7 +48,7 @@ module.exports = function (options, sheetIndex) {
   //
   // Pushes the next row onto the `rows`
   //
-  var rawObj = []
+  
   function pushRow() {
     //
     // Fill the row since we prefer the empty string
