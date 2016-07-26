@@ -56,24 +56,24 @@ module.exports = function (options, sheetIndex) {
     //
     rows.push(rawObj);
     rawObj = []
-    ckRow = true;
   }
   var ckRow = true;// check end row : true = start row
-  var currentRow
+  var currentRow = 1;
   Object.keys(sheet).forEach(function (cell) {
     if (!isCell.test(cell)) {
       return;
     }
-    var currentLetter = getLetter(cell);
+    
     var strCell = cell;
-    var currentCell = strCell.substr(currentLetter.length)
+    var currentCell = parseInt(cell.substring(1))
     // check first row parameter
       if (ckRow) {
         currentRow = currentCell
         ckRow = false;
       }else{
         // check data is new row push data in array
-        if (currentRow != currentCell) {
+        if (currentRow !== currentCell) {
+          currentRow = currentCell
           pushRow()
         }
       }
