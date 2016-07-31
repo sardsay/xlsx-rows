@@ -65,7 +65,8 @@ module.exports = function (options, sheetIndex) {
     }
     
     var strCell = cell;
-    var currentCell = parseInt(cell.substring(1))
+    var currentLetter = getLetter(cell);
+    var currentCell = strCell.substr(currentLetter.length)
     // check first row parameter
       if (ckRow) {
         currentRow = currentCell
