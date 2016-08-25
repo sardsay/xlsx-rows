@@ -29,15 +29,17 @@ module.exports = function (options, sheetIndex) {
       format = 'v',
       workbook,
       sheetname,
-      sheet;
+      sheet,
+      workbookOp;
 
   if (typeof options !== 'string') {
     file      = options.file;
     sheetname = options.sheetname;
     format    = options.format || 'w';
+    workbookOp  = options.workbook;
   }
 
-  workbook  = xlsx.readFile(file);
+  workbook  = workbookOp || xlsx.readFile(file);
   sheetname = sheetname || workbook.SheetNames[sheetIndex];
   sheet     = workbook.Sheets[sheetname];
 
